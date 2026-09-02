@@ -1,0 +1,36 @@
+# Java
+
+*.class
+*.log
+
+# Maven
+
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Eclipse
+
+.classpath
+.project
+.settings/
+.factorypath
+
+
+# OS files
+
+Thumbs.db
+
+# Environment variables / secrets
+
+.env
+.env.*
+!.env.example
+
+# Local configuration
+
+application-local.properties
+application-local.yml
