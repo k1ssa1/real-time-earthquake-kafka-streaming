@@ -3,10 +3,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
+	
+	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
+		
+		log.info("Starting earthquake ingestion...");
+		
 		HttpClient client = HttpClient.newHttpClient();
 		
 		HttpRequest request = HttpRequest.newBuilder(
@@ -17,14 +24,16 @@ public class Main {
 		    .build();
 		
 		try {
+			log.info("Sending request to USGS earthquake API...");
 			HttpResponse<String> response = client.send(
 				    request,
 				    HttpResponse.BodyHandlers.ofString()
 				);
+			log.info("API response received. Status code: {}", response.statusCode());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Failed to communicate with USGS API", e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error("HTTP request was interrupted", e);
 		}
 
 	}
