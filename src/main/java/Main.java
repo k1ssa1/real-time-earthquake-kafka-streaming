@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 public class Main {
 	
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -26,6 +28,8 @@ public class Main {
 		    .header("accept", "application/json")
 		    .build();
 		
+		EarthquakeProducer producer = new EarthquakeProducer();
+		
 		try {
 			log.info("Sending request to USGS earthquake API...");
 			HttpResponse<String> response = client.send(
@@ -33,8 +37,6 @@ public class Main {
 				    HttpResponse.BodyHandlers.ofString()
 				);
 			log.info("API response received. Status code: {}", response.statusCode());
-			
-			EarthquakeProducer producer = new EarthquakeProducer();
 			
 			JSONObject json = new JSONObject(response.body());
 			JSONArray features = json.getJSONArray("features");
@@ -55,6 +57,8 @@ public class Main {
 			log.error("Failed to communicate with USGS API", e);
 		} catch (InterruptedException e) {
 			log.error("HTTP request was interrupted", e);
+		}finally {
+			producer.close();
 		}
 
 	}

@@ -23,4 +23,8 @@ public class EarthquakeProducer {
 		ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
 		producer.send(record);
 	}
+	
+	public void close() {
+	    producer.close();
+	}
 }
