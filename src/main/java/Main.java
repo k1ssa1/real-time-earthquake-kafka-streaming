@@ -37,9 +37,11 @@ public class Main {
 				    HttpResponse.BodyHandlers.ofString()
 				);
 			log.info("API response received. Status code: {}", response.statusCode());
+			System.out.println("Status code: " + response.statusCode());
 			
 			JSONObject json = new JSONObject(response.body());
 			JSONArray features = json.getJSONArray("features");
+			System.out.println("Feature count: " + features.length());
 			
 			for (int i = 0; i < features.length(); i++) {
 			    JSONObject feature = features.getJSONObject(i);
@@ -47,7 +49,7 @@ public class Main {
 			    JSONObject properties = feature.getJSONObject("properties");
 
 			    String value = properties.toString();
-
+			    System.out.println("Sending: " + id);
 			    producer.send(id, value);
 			}
 
