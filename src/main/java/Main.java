@@ -3,6 +3,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +33,24 @@ public class Main {
 				    HttpResponse.BodyHandlers.ofString()
 				);
 			log.info("API response received. Status code: {}", response.statusCode());
+			
+			EarthquakeProducer producer = new EarthquakeProducer();
+			
+			JSONObject json = new JSONObject(response.body());
+			JSONArray features = json.getJSONArray("features");
+			
+			for (int i = 0; i < features.length(); i++) {
+			    JSONObject feature = features.getJSONObject(i);
+			    String id = feature.getString("id");
+			    JSONObject properties = feature.getJSONObject("properties");
+
+			    String value = properties.toString();
+
+			    producer.send(id, value);
+			}
+
+			log.info("Sent {} earthquakes to Kafka", features.length());
+			
 		} catch (IOException e) {
 			log.error("Failed to communicate with USGS API", e);
 		} catch (InterruptedException e) {
